@@ -4,48 +4,49 @@
   "description": "Case do NHÓM tự viết thêm để cover thêm trường hợp. Mỗi case cần: id, phase='B', query HOẶC turns, failure_type (thuộc allowed_failure_types), và expect (tool_calls[...] hoặc no_tool=true). Nên kèm metadata.what_it_tests.",
   "allowed_failure_types": ["wrong_tool", "wrong_arg_value", "wrong_boundary", "unnecessary_tool", "out_of_scope", "missing_info"],
   "cases": [{
-      "id": "R15_github_analyze_basic",
+      "id": "R15_lookup_news_basic",
       "phase": "B",
       "suite": "base",
       "case_suite": "base",
       "is_multiturn": false,
+      "failure_type": "wrong_arg_value",
       "metadata": {
         "skill": "single_tool_call",
         "difficulty": "medium",
-        "what_it_tests": "Kiểm tra khả năng phân tích một tệp tin cụ thể trong repo GitHub và trích xuất đúng filter extension."
+        "what_it_tests": "Tra cứu tin tức: AI phải tách query gọn (chỉ thực thể chính), đặt topic='news' và timeframe='day' thay vì nhồi từ chỉ thời gian/thể loại vào query."
       },
-      "input": "Phân tích giúp tôi các file code python trong thư mục models của repo này: https://github.com/ultralytics/ultralytics",
+      "input": "Cập nhật giúp tôi tin tức hôm nay về Nvidia với",
       "expect": {
         "tool_calls": [
           {
-            "name": "github_analyze",
+            "name": "lookup",
             "args": {
-              "repo_url": "https://github.com/ultralytics/ultralytics",
-              "path": "models",
-              "file_extension_filter": ["py"]
+              "query": "Nvidia",
+              "topic": "news",
+              "timeframe": "day"
             }
           }
         ]
       }
     },
     {
-      "id": "R16_github_boundary_check",
+      "id": "R16_fetch_boundary_check",
       "phase": "B",
       "suite": "base",
       "case_suite": "base",
       "is_multiturn": false,
+      "failure_type": "wrong_boundary",
       "metadata": {
         "skill": "confirm_before_write",
         "difficulty": "hard",
-        "what_it_tests": "Kiểm tra ranh giới an toàn (wrong_boundary). Không có URL cụ thể thì AI PHẢI gọi clarify xin link chứ KHÔNG được đoán mò repo."
+        "what_it_tests": "Kiểm tra ranh giới an toàn (wrong_boundary). Người dùng không đưa URL cụ thể thì AI PHẢI gọi clarify xin link chứ KHÔNG được tự đoán mò địa chỉ bài viết để fetch."
       },
-      "input": "Xem hộ tôi cấu trúc mã nguồn của thư mục src dự án YOLOv8 với",
+      "input": "Đọc và tóm tắt hộ tôi bài viết mới trên TechCrunch về OpenAI với",
       "expect": {
         "tool_calls": [
           {
             "name": "clarify",
             "args": {
-              "question": "Vui lòng cung cấp đường dẫn URL chính xác đến kho lưu trữ GitHub chứa dự án YOLOv8 để tôi tiến hành phân tích.",
               "response_type": "text"
             }
           }
@@ -53,76 +54,77 @@
       }
     },
     {
-      "id": "R17_youtube_basic_transcript",
+      "id": "R17_citation_basic",
       "phase": "B",
       "suite": "base",
       "case_suite": "base",
       "is_multiturn": false,
+      "failure_type": "wrong_arg_value",
       "metadata": {
         "skill": "single_tool_call",
         "difficulty": "medium",
-        "what_it_tests": "Trích xuất phụ đề video YouTube thông thường kèm theo ngôn ngữ chỉ định và cờ tắt timestamp."
+        "what_it_tests": "Tạo trích dẫn nguồn offline: AI phải đưa đúng source_url và để style ở mức mặc định (apa) khi người dùng không yêu cầu chuẩn trích dẫn cụ thể."
       },
-      "input": "Lấy phụ đề tiếng Anh của video này để tôi đọc tóm tắt nhé: https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      "input": "Tạo giúp tôi một trích dẫn nguồn cho bài báo này nhé: https://arxiv.org/abs/1706.03762",
       "expect": {
         "tool_calls": [
           {
-            "name": "youtube_transcript",
+            "name": "format_citation",
             "args": {
-              "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-              "language": "en",
-              "include_timestamps": false
+              "source_url": "https://arxiv.org/abs/1706.03762",
+              "style": "apa"
             }
           }
         ]
       }
     },
     {
-      "id": "R18_youtube_carryover_timestamp",
+      "id": "R18_citation_carryover_style",
       "phase": "B",
       "suite": "base",
       "case_suite": "base",
       "is_multiturn": true,
+      "failure_type": "wrong_arg_value",
       "metadata": {
         "skill": "multiturn_carryover",
         "difficulty": "hard",
-        "what_it_tests": "Hội thoại đa lượt: Turn 2 ép AI phải giữ nguyên URL video ở Turn 1 nhưng đổi trạng thái cấu hình include_timestamps sang True."
+        "what_it_tests": "Hội thoại đa lượt: Turn 2 ép AI phải giữ nguyên source_url ở Turn 1 nhưng đổi tham số style sang chuẩn IEEE."
       },
-      "input": [
+      "turns": [
         {
           "role": "user",
-          "content": "Tôi muốn lấy phụ đề of video hội thảo này: https://www.youtube.com/watch?v=GTC2026"
+          "content": "Trích dẫn giúp mình nguồn này với: https://arxiv.org/abs/1706.03762"
         },
         {
           "role": "user",
-          "content": "À, xuất kèm cả mốc thời gian chi tiết từng đoạn (timestamps) nữa nhé để tôi làm timeline."
+          "content": "À, cho mình đổi sang định dạng chuẩn IEEE nhé."
         }
       ],
       "expect": {
         "tool_calls": [
           {
-            "name": "youtube_transcript",
+            "name": "format_citation",
             "args": {
-              "video_url": "https://www.youtube.com/watch?v=GTC2026",
-              "language": "en",
-              "include_timestamps": true
+              "source_url": "https://arxiv.org/abs/1706.03762",
+              "style": "ieee"
             }
           }
         ]
       }
     },
     {
-      "id": "R19_parallel_research_and_code",
+      "id": "R19_parallel_papers_and_citation",
       "phase": "B",
       "suite": "base",
       "case_suite": "base",
       "is_multiturn": false,
+      "failure_type": "missing_info",
       "metadata": {
         "skill": "parallel_tool_calls",
         "difficulty": "hard",
-        "what_it_tests": "Gọi tool song song đa tác vụ (Parallel): Vừa tra cứu bài báo khoa học vừa bóc tách repository được đính kèm trong câu lệnh."
+        "what_it_tests": "Gọi tool song song đa tác vụ (Parallel): Vừa tra cứu bài báo khoa học trên arxiv, vừa tạo trích dẫn cho đường link nguồn được đính kèm trong câu lệnh."
       },
-      "input": "Tìm hộ tôi các bài báo về mạng Neural sinh học trên arxiv và đồng thời phân tích luôn kho mã nguồn này giúp tôi: https://github.com/karpathy/micrograd",
+      "input": "Tìm hộ tôi các bài báo về mạng Neural sinh học trên arxiv và đồng thời tạo luôn trích dẫn cho nguồn này giúp tôi: https://arxiv.org/abs/1706.03762",
       "expect": {
         "tool_calls": [
           {
@@ -132,9 +134,9 @@
             }
           },
           {
-            "name": "github_analyze",
+            "name": "format_citation",
             "args": {
-              "repo_url": "https://github.com/karpathy/micrograd"
+              "source_url": "https://arxiv.org/abs/1706.03762"
             }
           }
         ]

@@ -199,39 +199,17 @@ tools:
           description: "Giới hạn tổng số lượng ký tự tối đa cần trích xuất."
       required: [arxiv_url]
       
-  - name: github_analyze
-    description: "Trích xuất và phân tích cấu trúc, mã nguồn (source code) của một tệp tin hoặc thư mục cụ thể từ kho lưu trữ GitHub công khai."
+  - name: format_citation
+    description: "Tạo một trích dẫn nguồn (citation) được định dạng từ một URL hoặc ID bài báo, hoàn toàn offline, KHÔNG cần internet hay API. Dùng khi người dùng yêu cầu trích dẫn/ghi nguồn cho một bài viết, bài báo khoa học cụ thể."
     parameters:
       type: object
       properties:
-        repo_url: 
+        source_url:
           type: string
-          description: "Đường dẫn URL chính xác dẫn đến kho lưu trữ GitHub (Ví dụ: 'https://github.com/ultralytics/ultralytics'). TUYỆT ĐỐI KHÔNG tự bịa ra link nếu người dùng không cung cấp."
-        path: 
+          description: "Đường dẫn URL hoặc ID của nguồn cần trích dẫn (Ví dụ: 'https://arxiv.org/abs/1706.03762', 'https://example.com/bai-viet'). TUYỆT ĐỐI KHÔNG tự bịa ra link nếu người dùng không cung cấp."
+        style:
           type: string
-          default: ""
-          description: "Đường dẫn cụ thể đến tệp tin hoặc thư mục cần đọc bên trong repo (Ví dụ: 'models/yolov8.py'). Nếu để trống, hệ thống sẽ đọc cấu trúc thư mục gốc (root directory)."
-        file_extension_filter:
-          type: array
-          default: []
-          items: {type: string}
-          description: "Danh sách các đuôi mở rộng của tệp tin cần lọc ra để phân tích (Ví dụ: ['py', 'cpp', 'json']). Chừa trống nếu muốn đọc mọi loại file."
-      required: [repo_url]
-
-  - name: youtube_transcript
-    description: "Lấy toàn bộ nội dung văn bản phụ đề (transcript) và mốc thời gian (timestamps) của một video cụ thể trên YouTube để phục vụ việc tóm tắt hoặc tra cứu nội dung."
-    parameters:
-      type: object
-      properties:
-        video_url: 
-          type: string
-          description: "Đường dẫn URL chính xác hoặc mã ID của video YouTube cần trích xuất (Ví dụ: 'https://www.youtube.com/watch?v=abc123xyz' hoặc 'abc123xyz')."
-        language: 
-          type: string
-          default: "en"
-          description: "Mã ngôn ngữ của phụ đề cần lấy (Ví dụ: 'en' cho tiếng Anh, 'vi' cho tiếng Việt). Nếu không tìm thấy ngôn ngữ yêu cầu, hệ thống sẽ tự động lấy phụ đề được tạo tự động (auto-generated)."
-        include_timestamps:
-          type: boolean
-          default: false
-          description: "Đặt là True nếu người dùng yêu cầu làm mốc thời gian chi tiết (timeline/timestamps) cho từng đoạn hội thoại trong video."
-      required: [video_url]
+          enum: [apa, mla, ieee]
+          default: "apa"
+          description: "Kiểu định dạng trích dẫn. Mặc định là 'apa'. Chỉ đổi sang 'mla' hoặc 'ieee' khi người dùng yêu cầu rõ chuẩn trích dẫn cụ thể."
+      required: [source_url]

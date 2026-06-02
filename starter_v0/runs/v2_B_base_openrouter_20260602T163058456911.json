@@ -1,0 +1,480 @@
+{
+  "run_id": "v2_B_base_openrouter_20260602T163058456911",
+  "version": "v2",
+  "artifact_version": "v2+pdfb063b57c57+tbe8024f7e43d",
+  "prompt_hash": "dfb063b57c5798da86c52ae0b7b861a03ecfe7a4a58e0ddccf5819dabac9cf7b",
+  "tools_hash": "be8024f7e43d80e5eff9e7b1def097d9db5ed98447fe56afef47e12e5e604518",
+  "phase": "B",
+  "suite": "base",
+  "provider": "openrouter",
+  "model": "openai/gpt-4o-mini",
+  "system_prompt": "D:\\Vin_500\\Day4\\Lab\\Day04-C401-Prompt-Engineering-Tool-Calling-Labs-student\\starter_v0\\artifacts\\system_prompt.md",
+  "tools": "D:\\Vin_500\\Day4\\Lab\\Day04-C401-Prompt-Engineering-Tool-Calling-Labs-student\\starter_v0\\artifacts\\tools.yaml",
+  "eval_cases": "data\\eval_group.json",
+  "dataset_id": "day04_v2_research_group",
+  "dataset_role": "group",
+  "description": "Case do NHÓM tự viết thêm để cover thêm trường hợp. Mỗi case cần: id, phase='B', query HOẶC turns, failure_type (thuộc allowed_failure_types), và expect (tool_calls[...] hoặc no_tool=true). Nên kèm metadata.what_it_tests.",
+  "generated_at": "2026-06-02T16:30:58",
+  "summary": {
+    "total_cases": 5,
+    "measured_cases": 5,
+    "provider_error_cases": 0,
+    "passed_cases": 2,
+    "case_accuracy": 0.4,
+    "tool_routing_accuracy": 0.8,
+    "argument_accuracy": 0.4,
+    "multiturn_accuracy": 1.0,
+    "failure_counts": {
+      "wrong_boundary": 1,
+      "wrong_arg_value": 1,
+      "missing_info": 1
+    },
+    "observed_mismatch_counts": {
+      "missing_tool_call": 1,
+      "wrong_arg_value": 2
+    }
+  },
+  "results": [
+    {
+      "id": "R15_github_analyze_basic",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "single_tool_call",
+        "difficulty": "medium",
+        "what_it_tests": "Kiểm tra khả năng phân tích một tệp tin cụ thể trong repo GitHub và trích xuất đúng filter extension."
+      },
+      "input": "Phân tích giúp tôi các file code python trong thư mục models của repo này: https://github.com/ultralytics/ultralytics",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "github_analyze",
+            "args": {
+              "repo_url": "https://github.com/ultralytics/ultralytics",
+              "path": "models",
+              "file_extension_filter": [
+                "py"
+              ]
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "github_analyze",
+            "args": {
+              "repo_url": "https://github.com/ultralytics/ultralytics",
+              "path": "models",
+              "file_extension_filter": [
+                "py"
+              ]
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "github_analyze",
+          "args": {
+            "repo_url": "https://github.com/ultralytics/ultralytics",
+            "path": "models",
+            "file_extension_filter": [
+              "py"
+            ]
+          },
+          "result": {
+            "tool": "github_analyze",
+            "error": "HTTPError",
+            "message": "404 Client Error: Not Found for url: https://api.github.com/repos/ultralytics/ultralytics/contents/models"
+          }
+        }
+      ]
+    },
+    {
+      "id": "R16_github_boundary_check",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "confirm_before_write",
+        "difficulty": "hard",
+        "what_it_tests": "Kiểm tra ranh giới an toàn (wrong_boundary). Không có URL cụ thể thì AI PHẢI gọi clarify xin link chứ KHÔNG được đoán mò repo."
+      },
+      "input": "Xem hộ tôi cấu trúc mã nguồn của thư mục src dự án YOLOv8 với",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "question": "Vui lòng cung cấp đường dẫn URL chính xác đến kho lưu trữ GitHub chứa dự án YOLOv8 để tôi tiến hành phân tích.",
+              "response_type": "text"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": false,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "github_analyze",
+            "args": {
+              "repo_url": "https://github.com/ultralytics/ultralytics",
+              "path": "src"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_boundary",
+        "observed_mismatch": "missing_tool_call",
+        "failure_type": "wrong_boundary",
+        "failures": [
+          "missing tool call clarify",
+          "extra tool call github_analyze"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "github_analyze",
+          "args": {
+            "repo_url": "https://github.com/ultralytics/ultralytics",
+            "path": "src"
+          },
+          "result": {
+            "tool": "github_analyze",
+            "error": "HTTPError",
+            "message": "403 Client Error: rate limit exceeded for url: https://api.github.com/repos/ultralytics/ultralytics/contents/src"
+          }
+        }
+      ]
+    },
+    {
+      "id": "R17_citation_basic",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "single_tool_call",
+        "difficulty": "medium",
+        "what_it_tests": "Tạo trích dẫn nguồn offline: AI phải đưa đúng source_url và để style ở mức mặc định (apa) khi người dùng không yêu cầu chuẩn trích dẫn cụ thể."
+      },
+      "input": "Tạo giúp tôi một trích dẫn nguồn cho bài báo này nhé: https://arxiv.org/abs/1706.03762",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "format_citation",
+            "args": {
+              "source_url": "https://arxiv.org/abs/1706.03762",
+              "style": "apa"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": true,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "format_citation",
+            "args": {
+              "source_url": "https://arxiv.org/abs/1706.03762"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": "wrong_arg_value",
+        "failure_type": "wrong_arg_value",
+        "failures": [
+          "style: expected 'apa', got None"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "format_citation",
+          "args": {
+            "source_url": "https://arxiv.org/abs/1706.03762"
+          },
+          "result": {
+            "tool": "format_citation",
+            "source_url": "https://arxiv.org/abs/1706.03762",
+            "style": "apa",
+            "citation": "arxiv.org. (n.d.). arXiv:1706.03762. Truy cập từ https://arxiv.org/abs/1706.03762"
+          }
+        }
+      ]
+    },
+    {
+      "id": "R18_citation_carryover_style",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_carryover",
+        "difficulty": "hard",
+        "what_it_tests": "Hội thoại đa lượt: Turn 2 ép AI phải giữ nguyên source_url ở Turn 1 nhưng đổi tham số style sang chuẩn IEEE."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Trích dẫn giúp mình nguồn này với: https://arxiv.org/abs/1706.03762"
+        },
+        {
+          "role": "user",
+          "content": "À, cho mình đổi sang định dạng chuẩn IEEE nhé."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "format_citation",
+            "args": {
+              "source_url": "https://arxiv.org/abs/1706.03762",
+              "style": "ieee"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "format_citation",
+            "args": {
+              "source_url": "https://arxiv.org/abs/1706.03762",
+              "style": "ieee"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "format_citation",
+          "args": {
+            "source_url": "https://arxiv.org/abs/1706.03762",
+            "style": "ieee"
+          },
+          "result": {
+            "tool": "format_citation",
+            "source_url": "https://arxiv.org/abs/1706.03762",
+            "style": "ieee",
+            "citation": "arxiv.org, \"arXiv:1706.03762,\" [Online]. Available: https://arxiv.org/abs/1706.03762"
+          }
+        }
+      ]
+    },
+    {
+      "id": "R19_parallel_research_and_code",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "parallel_tool_calls",
+        "difficulty": "hard",
+        "what_it_tests": "Gọi tool song song đa tác vụ (Parallel): Vừa tra cứu bài báo khoa học vừa bóc tách repository được đính kèm trong câu lệnh."
+      },
+      "input": "Tìm hộ tôi các bài báo về mạng Neural sinh học trên arxiv và đồng thời phân tích luôn kho mã nguồn này giúp tôi: https://github.com/karpathy/micrograd",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "papers",
+            "args": {
+              "query": "mạng Neural sinh học"
+            }
+          },
+          {
+            "name": "github_analyze",
+            "args": {
+              "repo_url": "https://github.com/karpathy/micrograd"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": true,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "papers",
+            "args": {
+              "query": "biological neural networks",
+              "max_results": 5
+            }
+          },
+          {
+            "name": "github_analyze",
+            "args": {
+              "repo_url": "https://github.com/karpathy/micrograd"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "missing_info",
+        "observed_mismatch": "wrong_arg_value",
+        "failure_type": "missing_info",
+        "failures": [
+          "query: expected 'mạng Neural sinh học', got 'biological neural networks'"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "papers",
+          "args": {
+            "query": "biological neural networks",
+            "max_results": 5
+          },
+          "result": {
+            "tool": "arxiv_search",
+            "query": "biological neural networks",
+            "api_query": "all:biological AND all:neural AND all:networks",
+            "total_results": 5095,
+            "items": [
+              {
+                "arxiv_id": "1002.1164v1",
+                "title": "Existence and Global Logarithmic Stability of Impulsive Neural Networks with Time Delay",
+                "summary": "The stability and convergence of the neural networks are the fundamental characteristics in the Hopfield type networks. Since time delay is ubiquitous in most physical and biological systems, more attention is being made for the delayed neural networks. The inclusion of time delay into a neural model is natural due to the finite transmission time of the interactions. The stability analysis of the neural networks depends on the Lyapunov function and hence it must be constructed for the given system. In this paper we have made an attempt to establish the logarithmic stability of the impulsive delayed neural networks by constructing suitable Lyapunov function.",
+                "authors": [
+                  "A. K. Ojha",
+                  "Dushmanta Mallick",
+                  "C. Mallick"
+                ],
+                "published": "2010-02-05T09:20:51Z",
+                "updated": "2010-02-05T09:20:51Z",
+                "url": "http://arxiv.org/abs/1002.1164v1",
+                "pdf_url": "https://arxiv.org/pdf/1002.1164v1",
+                "source": "arxiv.org",
+                "primary_category": "cs.NE",
+                "categories": [
+                  "cs.NE"
+                ]
+              },
+              {
+                "arxiv_id": "1905.11391v2",
+                "title": "Using Neural Networks for Relation Extraction from Biomedical Literature",
+                "summary": "Using different sources of information to support automated extracting of relations between biomedical concepts contributes to the development of our understanding of biological systems. The primary comprehensive source of these relations is biomedical literature. Several relation extraction approaches have been proposed to identify relations between concepts in biomedical literature, namely, using neural networks algorithms. The use of multichannel architectures composed of multiple data representations, as in deep neural networks, is leading to state-of-the-art results. The right combination of data representations can eventually lead us to even higher evaluation scores in relation extraction tasks. Thus, biomedical ontologies play a fundamental role by providing semantic and ancestry information about an entity. The incorporation of biomedical ontologies has already been proved to enhance previous state-of-the-art results.",
+                "authors": [
+                  "Diana Sousa",
+                  "Andre Lamurias",
+                  "Francisco M. Couto"
+                ],
+                "published": "2019-05-27T09:33:29Z",
+                "updated": "2020-09-18T13:40:39Z",
+                "url": "http://arxiv.org/abs/1905.11391v2",
+                "pdf_url": "https://arxiv.org/pdf/1905.11391v2",
+                "source": "arxiv.org",
+                "primary_category": "cs.CL",
+                "categories": [
+                  "cs.CL",
+                  "cs.LG",
+                  "stat.ML"
+                ]
+              },
+              {
+                "arxiv_id": "1805.03886v1",
+                "title": "Effect of dilution in asymmetric recurrent neural networks",
+                "summary": "We study with numerical simulation the possible limit behaviors of synchronous discrete-time deterministic recurrent neural networks composed of N binary neurons as a function of a network's level of dilution and asymmetry. The network dilution measures the fraction of neuron couples that are connected, and the network asymmetry measures to what extent the underlying connectivity matrix is asymmetric. For each given neural network, we study the dynamical evolution of all the different initial conditions, thus characterizing the full dynamical landscape without imposing any learning rule. Because of the deterministic dynamics, each trajectory converges to an attractor, that can be either a fixed point or a limit cycle. These attractors form the set of all the possible limit behaviors of the neural network. For each network, we then determine the convergence times, the limit cycles' length, the number of attractors, and the sizes of the attractors' basin. We show that there are two network structures that maximize the number of possible limit behaviors. The first optimal network structure is fully-connected and symmetric. On the contrary, the second optimal network structure is highly sparse and asymmetric. The latter optimal is similar to what observed in different biological neuronal circuits. These observations lead us to hypothesize that independently from any given learning model, an efficient and effective biologic network that stores a number of limit behaviors close to its maximum capacity tends to develop a connectivity structure similar to one of the optimal networks we found.",
+                "authors": [
+                  "Viola Folli",
+                  "Giorgio Gosti",
+                  "Marco Leonetti",
+                  "Giancarlo Ruocco"
+                ],
+                "published": "2018-05-10T08:41:27Z",
+                "updated": "2018-05-10T08:41:27Z",
+                "url": "http://arxiv.org/abs/1805.03886v1",
+                "pdf_url": "https://arxiv.org/pdf/1805.03886v1",
+                "source": "arxiv.org",
+                "primary_category": "cond-mat.dis-nn",
+                "categories": [
+                  "cond-mat.dis-nn",
+                  "cs.NE",
+                  "q-bio.NC"
+                ]
+              },
+              {
+                "arxiv_id": "2010.04434v3",
+                "title": "Tuning Convolutional Spiking Neural Network with Biologically-plausible Reward Propagation",
+                "summary": "Spiking Neural Networks (SNNs) contain more biologically realistic structures and biologically-inspired learning principles than those in standard Artificial Neural Networks (ANNs). SNNs are considered the third generation of ANNs, powerful on the robust computation with a low computational cost. The neurons in SNNs are non-differential, containing decayed historical states and generating event-based spikes after their states reaching the firing threshold. These dynamic characteristics of SNNs make it difficult to be directly trained with the standard backpropagation (BP), which is also considered not biologically plausible. In this paper, a Biologically-plausible Reward Propagation (BRP) algorithm is proposed and applied to the SNN architecture with both spiking-convolution (with both 1D and 2D convolutional kernels) and full-connection layers. Unlike the standard BP that propagates error signals from post to presynaptic neurons layer by layer, the BRP propagates target labels instead of errors directly from the output layer to all pre-hidden layers. This effort is more consistent with the top-down reward-guiding learning in cortical columns of the neocortex. Synaptic modifications with only local gradient differences are induced with pseudo-BP that might also be replaced with the Spike-Timing Dependent Plasticity (STDP). The performance of the proposed BRP-SNN is further verified on the spatial (including MNIST and Cifar-10) and temporal (including TIDigits and DvsGesture) tasks, where the SNN using BRP has reached a similar accuracy compared to other state-of-the-art BP-based SNNs and saved 50% more computational cost than ANNs. We think the introduction of biologically plausible learning rules to the training procedure of biologically realistic SNNs will give us more hints and inspirations toward a better understanding of the biological system's intelligent nature.",
+                "authors": [
+                  "Tielin Zhang",
+                  "Shuncheng Jia",
+                  "Xiang Cheng",
+                  "Bo Xu"
+                ],
+                "published": "2020-10-09T08:42:13Z",
+                "updated": "2021-05-31T13:50:56Z",
+                "url": "http://arxiv.org/abs/2010.04434v3",
+                "pdf_url": "https://arxiv.org/pdf/2010.04434v3",
+                "source": "arxiv.org",
+                "primary_category": "cs.NE",
+                "categories": [
+                  "cs.NE",
+                  "cs.AI"
+                ]
+              },
+              {
+                "arxiv_id": "2506.14138v1",
+                "title": "NeuroCoreX: An Open-Source FPGA-Based Spiking Neural Network Emulator with On-Chip Learning",
+                "summary": "Spiking Neural Networks (SNNs) are computational models inspired by the structure and dynamics of biological neuronal networks. Their event-driven nature enables them to achieve high energy efficiency, particularly when deployed on neuromorphic hardware platforms. Unlike conventional Artificial Neural Networks (ANNs), which primarily rely on layered architectures, SNNs naturally support a wide range of connectivity patterns, from traditional layered structures to small-world graphs characterized by locally dense and globally sparse connections. In this work, we introduce NeuroCoreX, an FPGA-based emulator designed for the flexible co-design and testing of SNNs. NeuroCoreX supports all-to-all connectivity, providing the capability to implement diverse network topologies without architectural restrictions. It features a biologically motivated local learning mechanism based on Spike-Timing-Dependent Plasticity (STDP). The neuron model implemented within NeuroCoreX is the Leaky Integrate-and-Fire (LIF) model, with current-based synapses facilitating spike integration and transmission . A Universal Asynchronous Receiver-Transmitter (UART) interface is provided for programming and configuring the network parameters, including neuron, synapse, and learning rule settings. Users interact with the emulator through a simple Python-based interface, streamlining SNN deployment from model design to hardware execution. NeuroCoreX is released as an open-source framework, aiming to accelerate research and development in energy-efficient, biologically inspired computing.",
+                "authors": [
+                  "Ashish Gautam",
+                  "Prasanna Date",
+                  "Shruti Kulkarni",
+                  "Robert Patton",
+                  "Thomas Potok"
+                ],
+                "published": "2025-06-17T03:02:04Z",
+                "updated": "2025-06-17T03:02:04Z",
+                "url": "http://arxiv.org/abs/2506.14138v1",
+                "pdf_url": "https://arxiv.org/pdf/2506.14138v1",
+                "source": "arxiv.org",
+                "primary_category": "cs.NE",
+                "categories": [
+                  "cs.NE",
+                  "cs.AI"
+                ]
+              }
+            ],
+            "rate_limit_note": "arXiv may return 429 if called too frequently; this tool waits at least 3 seconds between requests in-process."
+          }
+        },
+        {
+          "tool": "github_analyze",
+          "args": {
+            "repo_url": "https://github.com/karpathy/micrograd"
+          },
+          "result": {
+            "tool": "github_analyze",
+            "error": "HTTPError",
+            "message": "403 Client Error: rate limit exceeded for url: https://api.github.com/repos/karpathy/micrograd/contents/"
+          }
+        }
+      ]
+    }
+  ]
+}
