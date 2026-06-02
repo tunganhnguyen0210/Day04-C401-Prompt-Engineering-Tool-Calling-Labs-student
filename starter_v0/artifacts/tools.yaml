@@ -19,41 +19,71 @@ tools:
       required: [question]
 
   - name: timeline
-    description: "Lấy các bài đăng gần đây."
+    description: "Lấy các bài đăng gần đây của một tài khoản mạng xã hội cụ thể."
     parameters:
       type: object
       properties:
-        screenname: {type: string, default: "", description: "Tên tài khoản"}
-        limit: {type: integer, default: 5, description: "Số lượng"}
+        screenname: 
+          type: string
+          description: "Tên định danh (username/handle) chính xác của tài khoản cần lấy bài đăng (Ví dụ: 'sama', 'elonmusk'). TUYỆT ĐỐI KHÔNG tự ý đoán bừa hoặc tự điền tên tài khoản nếu người dùng không cung cấp cụ thể trong câu lệnh."
+        limit: 
+          type: integer
+          default: 5
+          description: "Số lượng bài đăng tối đa cần lấy."
       required: [screenname]
 
   - name: social_search
-    description: "Tìm trên mạng xã hội."
+    description: "Chỉ sử dụng để tìm kiếm các bài đăng ngắn, bài tweet hoặc thảo luận của người dùng trên nền tảng mạng xã hội X (Twitter). KHÔNG dùng để tìm kiếm tin tức thời sự trên các trang báo điện tử hay trang web tổng hợp (vốn thuộc về hàm lookup)."
     parameters:
       type: object
       properties:
-        query: {type: string, default: "", description: "Từ khóa"}
-        search_type: {type: string, enum: [Latest, Top], default: "Latest", description: "Cách sắp xếp"}
-        limit: {type: integer, default: 5, description: "Số lượng"}
+        query: 
+          type: string
+          default: ""
+          description: "Từ khóa chính hoặc hashtag cần tìm trên mạng xã hội (Ví dụ: 'AI', '#OpenAI')."
+        search_type: 
+          type: string
+          enum: [Latest, Top]
+          default: "Latest"
+          description: "Bộ lọc hiển thị: 'Latest' để lấy các bài đăng mới nhất theo thời gian thực; 'Top' để lấy các bài đăng nổi bật, có nhiều tương tác."
+        limit: 
+          type: integer
+          default: 5
+          description: "Số lượng bài đăng tối đa cần lấy."
       required: [query]
 
   - name: lookup
-    description: "Tra cứu thông tin trên internet."
+    description: "Tra cứu thông tin, tin tức thời sự trên internet dựa trên từ khóa và bộ lọc."
     parameters:
       type: object
       properties:
-        query: {type: string, default: "", description: "Truy vấn"}
-        topic: {type: string, enum: [general, news], default: "general", description: "Phân loại"}
-        timeframe: {type: string, enum: [day, week, month, year], default: "week", description: "Khoảng thời gian"}
-        max_results: {type: integer, default: 5, description: "Số kết quả"}
+        query: 
+          type: string
+          default: ""
+          description: "Từ khóa chính hoặc thực thể cốt lõi cần tìm kiếm (Ví dụ: 'AI', 'Nvidia', 'Bitcoin'). TUYỆT ĐỐI KHÔNG bao gồm các từ chỉ thời gian (như 'hôm nay', 'today', 'gần đây') hoặc từ chỉ thể loại (như 'tin tức', 'news') vào đây nếu chúng đã có thể xử lý bằng tham số timeframe hoặc topic."
+        topic: 
+          type: string
+          enum: [general, news]
+          default: "general"
+          description: "Phân loại nội dung tìm kiếm. Chọn 'news' nếu người dùng hỏi về tin tức thời sự, sự kiện mới diễn ra. Chọn 'general' cho các tìm kiếm thông thường khác."
+        timeframe: 
+          type: string
+          enum: [day, week, month, year]
+          default: "week"
+          description: "Khoảng thời gian giới hạn của thông tin. Chọn 'day' nếu câu hỏi có từ khóa liên quan đến 'hôm nay', 'tin mới nhất trong ngày'."
+        max_results: 
+          type: integer
+          default: 5
+          description: "Số lượng kết quả tối đa cần trả về."
       required: [query]
-
   - name: fetch
-    description: "Lấy nội dung từ một địa chỉ."
+    description: "Đọc và lấy toàn bộ nội dung văn bản chi tiết từ một đường dẫn URL cụ thể."
     parameters:
       type: object
       properties:
-        url: {type: string, default: "", description: "Địa chỉ"}
+        url: 
+          type: string
+          description: "Đường dẫn URL chính xác của bài viết hoặc trang web cần đọc (Ví dụ: 'https://example.com/article'). TUYỆT ĐỐI KHÔNG tự ý bịa ra URL hoặc tự sinh từ khóa tìm kiếm nếu người dùng không cung cấp link cụ thể."
       required: [url]
 
   - name: format
@@ -79,13 +109,19 @@ tools:
 
   # ---------------- Bonus tools ----------------
   - name: send
-    description: "Gửi một đoạn văn bản đi."
+    description: "Gửi một đoạn văn bản hoặc bản tin lên nền t خار bên ngoài (như Telegram, Slack) sau khi đã có sự xác nhận chắc chắn từ người dùng."
     parameters:
       type: object
       properties:
-        text: {type: string, default: "", description: "Nội dung"}
-        confirmed: {type: boolean, default: false, description: "Cờ xác nhận"}
-      required: [text]
+        text: 
+          type: string
+          default: ""
+          description: "Nội dung văn bản chi tiết cần gửi đi."
+        confirmed: 
+          type: boolean
+          default: false
+          description: "Trạng thái xác nhận từ người dùng. BẮT BUỘC phải là True thì hệ thống mới thực hiện gửi. Nếu người dùng chưa bấm xác nhận hoặc chưa qua bước hỏi Yes/No, giá trị này sẽ là False và bạn PHẢI gọi hàm clarify với response_type='yes_no' trước."
+      required: [text, confirmed]
 
   - name: policy
     description: "Tìm trong tài liệu nội bộ."
