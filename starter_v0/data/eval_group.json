@@ -3,8 +3,9 @@
   "dataset_role": "group",
   "description": "Case do NHÓM tự viết thêm để cover thêm trường hợp. Mỗi case cần: id, phase='B', query HOẶC turns, failure_type (thuộc allowed_failure_types), và expect (tool_calls[...] hoặc no_tool=true). Nên kèm metadata.what_it_tests.",
   "allowed_failure_types": ["wrong_tool", "wrong_arg_value", "wrong_boundary", "unnecessary_tool", "out_of_scope", "missing_info"],
-  "cases": [{
-      "id": "R15_lookup_news_basic",
+  "cases": [
+    {
+      "id": "R15_timeline_user_tweets",
       "phase": "B",
       "suite": "base",
       "case_suite": "base",
@@ -13,7 +14,32 @@
       "metadata": {
         "skill": "single_tool_call",
         "difficulty": "medium",
-        "what_it_tests": "Tra cứu tin tức: AI phải tách query gọn (chỉ thực thể chính), đặt topic='news' và timeframe='day' thay vì nhồi từ chỉ thời gian/thể loại vào query."
+        "what_it_tests": "Lấy bài đăng của MỘT người cụ thể: AI phải định tuyến sang timeline, map tên 'Sam Altman' -> handle 'sama' và lấy đúng limit theo câu chữ."
+      },
+      "input": "Lấy giúp tôi 5 tweet mới nhất của Sam Altman nhé",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "sama",
+              "limit": 5
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "R16_lookup_news_today",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "failure_type": "wrong_arg_value",
+      "metadata": {
+        "skill": "single_tool_call",
+        "difficulty": "medium",
+        "what_it_tests": "Tra cứu tin tức thời sự: AI phải đặt topic='news', timeframe='day' cho 'hôm nay' và rút query gọn về thực thể chính ('Nvidia'), không nhồi từ chỉ thời gian/thể loại."
       },
       "input": "Cập nhật giúp tôi tin tức hôm nay về Nvidia với",
       "expect": {
@@ -30,31 +56,31 @@
       }
     },
     {
-      "id": "R16_fetch_boundary_check",
+      "id": "R17_fetch_given_url",
       "phase": "B",
       "suite": "base",
       "case_suite": "base",
       "is_multiturn": false,
-      "failure_type": "wrong_boundary",
+      "failure_type": "wrong_tool",
       "metadata": {
-        "skill": "confirm_before_write",
-        "difficulty": "hard",
-        "what_it_tests": "Kiểm tra ranh giới an toàn (wrong_boundary). Người dùng không đưa URL cụ thể thì AI PHẢI gọi clarify xin link chứ KHÔNG được tự đoán mò địa chỉ bài viết để fetch."
+        "skill": "single_tool_call",
+        "difficulty": "easy",
+        "what_it_tests": "Đã có sẵn URL cụ thể: AI phải gọi fetch đúng đường dẫn đó, KHÔNG đi tìm kiếm (lookup) thay thế."
       },
-      "input": "Đọc và tóm tắt hộ tôi bài viết mới trên TechCrunch về OpenAI với",
+      "input": "Đọc và tóm tắt giúp tôi nội dung bài viết này: https://vnexpress.net/cong-nghe-ai-2026.html",
       "expect": {
         "tool_calls": [
           {
-            "name": "clarify",
+            "name": "fetch",
             "args": {
-              "response_type": "text"
+              "url": "https://vnexpress.net/cong-nghe-ai-2026.html"
             }
           }
         ]
       }
     },
     {
-      "id": "R17_citation_basic",
+      "id": "R18_social_search_top",
       "phase": "B",
       "suite": "base",
       "case_suite": "base",
@@ -63,83 +89,42 @@
       "metadata": {
         "skill": "single_tool_call",
         "difficulty": "medium",
-        "what_it_tests": "Tạo trích dẫn nguồn offline: AI phải đưa đúng source_url và để style ở mức mặc định (apa) khi người dùng không yêu cầu chuẩn trích dẫn cụ thể."
+        "what_it_tests": "Tweet theo CHỦ ĐỀ (không gắn người cụ thể): AI phải gọi social_search với query lõi và đặt search_type='Top' khi người dùng nói 'phổ biến nhất'."
       },
-      "input": "Tạo giúp tôi một trích dẫn nguồn cho bài báo này nhé: https://arxiv.org/abs/1706.03762",
+      "input": "Tìm cho tôi các tweet đang phổ biến nhất về AI",
       "expect": {
         "tool_calls": [
           {
-            "name": "format_citation",
+            "name": "social_search",
             "args": {
-              "source_url": "https://arxiv.org/abs/1706.03762",
-              "style": "apa"
+              "query": "AI",
+              "search_type": "Top"
             }
           }
         ]
       }
     },
     {
-      "id": "R18_citation_carryover_style",
-      "phase": "B",
-      "suite": "base",
-      "case_suite": "base",
-      "is_multiturn": true,
-      "failure_type": "wrong_arg_value",
-      "metadata": {
-        "skill": "multiturn_carryover",
-        "difficulty": "hard",
-        "what_it_tests": "Hội thoại đa lượt: Turn 2 ép AI phải giữ nguyên source_url ở Turn 1 nhưng đổi tham số style sang chuẩn IEEE."
-      },
-      "turns": [
-        {
-          "role": "user",
-          "content": "Trích dẫn giúp mình nguồn này với: https://arxiv.org/abs/1706.03762"
-        },
-        {
-          "role": "user",
-          "content": "À, cho mình đổi sang định dạng chuẩn IEEE nhé."
-        }
-      ],
-      "expect": {
-        "tool_calls": [
-          {
-            "name": "format_citation",
-            "args": {
-              "source_url": "https://arxiv.org/abs/1706.03762",
-              "style": "ieee"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "id": "R19_parallel_papers_and_citation",
+      "id": "R19_clarify_missing_account",
       "phase": "B",
       "suite": "base",
       "case_suite": "base",
       "is_multiturn": false,
-      "failure_type": "missing_info",
+      "failure_type": "wrong_boundary",
       "metadata": {
-        "skill": "parallel_tool_calls",
+        "skill": "confirm_before_write",
         "difficulty": "hard",
-        "what_it_tests": "Gọi tool song song đa tác vụ (Parallel): Vừa tra cứu bài báo khoa học trên arxiv, vừa tạo trích dẫn cho đường link nguồn được đính kèm trong câu lệnh."
+        "what_it_tests": "Ranh giới an toàn (wrong_boundary): người dùng nhắc tweet nhưng KHÔNG nói của tài khoản nào -> AI phải gọi clarify hỏi tài khoản, KHÔNG tự đoán một người mặc định."
       },
-      "input": "Tìm hộ tôi các bài báo về mạng Neural sinh học trên arxiv và đồng thời tạo luôn trích dẫn cho nguồn này giúp tôi: https://arxiv.org/abs/1706.03762",
+      "input": "Tóm tắt 5 tweet mới nhất giúp mình với",
       "expect": {
         "tool_calls": [
           {
-            "name": "papers",
-            "args": {
-              "query": "mạng Neural sinh học"
-            }
-          },
-          {
-            "name": "format_citation",
-            "args": {
-              "source_url": "https://arxiv.org/abs/1706.03762"
-            }
+            "name": "clarify",
+            "args": {}
           }
         ]
       }
-    }]
+    }
+  ]
 }

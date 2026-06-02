@@ -9,24 +9,14 @@
 tools:
   # ---------------- Core tools ----------------
   - name: clarify
-    description: "Gửi một câu hỏi hoặc hộp thoại yêu cầu người dùng làm rõ, cung cấp thêm thông tin thiếu hoặc xác nhận hành động."
+    description: "Gửi một câu hỏi cho người dùng."
     parameters:
       type: object
       properties:
-        question: 
-          type: string
-          description: "Nội dung câu hỏi hoặc thông báo hiển thị cho người dùng."
-        response_type: 
-          type: string 
-          enum: [text, yes_no, choice]
-          default: "text" 
-          description: "Kiểu tương tác bắt buộc: Chọn 'yes_no' KHI VÀ CHỈ KHI cần xác nhận trước khi thực hiện hành động ghi/gửi dữ liệu nguy hiểm (Telegram, Slack). Chọn 'choice' nếu yêu cầu người dùng chọn từ danh sách options cung cấp sẵn. Chọn 'text' cho các câu hỏi mở xin thêm thông tin (URL, từ khóa)."
-        options: 
-          type: array 
-          default: [] 
-          items: {type: string} 
-          description: "Danh sách các lựa chọn (chỉ cung cấp khi response_type là 'choice')."
-    required: [question]
+        question: {type: string, default: "", description: "Câu hỏi"}
+        response_type: {type: string, enum: [text, yes_no, choice], default: "text", description: "Kiểu trả lời"}
+        options: {type: array, default: [], items: {type: string}, description: "Các lựa chọn"}
+      required: [question]
 
   - name: timeline
     description: "Lấy các bài đăng gần đây của một tài khoản mạng xã hội cụ thể."
@@ -97,31 +87,24 @@ tools:
       required: [url]
 
   - name: format
-    description: "Trình bày cấu trúc dữ liệu đã thu thập được thành văn bản hoàn chỉnh theo khuôn mẫu (template) quy định."
+    description: "Trình bày dữ liệu đã có thành văn bản."
     parameters:
       type: object
       properties:
         items:
           type: array
           default: []
-          description: "Mảng danh sách các bài viết hoặc bài đăng hợp lệ thu thập từ các công cụ tìm kiếm."
+          description: "Danh sách item"
           items:
             type: object
             properties:
-              title: {type: string, description: "Tiêu đề chính xác của bài viết hoặc bài đăng."}
-              url: {type: string, description: "Đường dẫn URL nguồn. TUYỆT ĐỐI KHÔNG để trống hoặc tự bịa ra link giả lập nếu không có."}
-              source: {type: string, description: "Tên nguồn bài viết hoặc tên tài khoản đăng bài."}
-              summary: {type: string, description: "Tóm tắt ngắn gọn nội dung cốt lõi của bài viết."}
-              section: {type: string, description: "Tên phân đoạn chuyên mục phù hợp với bài viết."}
-        template: 
-          type: string 
-          enum: [brief, sections, bullets, thread, daily_ai_vn] 
-          default: "sections" 
-          description: "Khuôn mẫu định dạng văn bản đầu ra theo yêu cầu cụ thể của người dùng."
-        headline: 
-          type: string 
-          default: "" 
-          description: "Tiêu đề lớn bao quát của toàn bộ bản tin văn bản."
+              title: {type: string}
+              url: {type: string}
+              source: {type: string}
+              summary: {type: string}
+              section: {type: string}
+        template: {type: string, enum: [brief, sections, bullets, thread, daily_ai_vn], default: "sections", description: "Khuôn"}
+        headline: {type: string, default: "", description: "Tiêu đề"}
       required: [items, template]
 
   # ---------------- Bonus tools ----------------
@@ -141,75 +124,31 @@ tools:
       required: [text, confirmed]
 
   - name: policy
-    description: "Tra cứu, tìm kiếm quy định và thông tin hướng dẫn trong kho tài liệu nội bộ."
+    description: "Tìm trong tài liệu nội bộ."
     parameters:
       type: object
       properties:
-        query: 
-          type: string 
-          default: "" 
-          description: "Từ khóa chính cần tra cứu. Lọc bỏ các từ chỉ hành động hoặc từ rác không liên quan."
-        policy_area: 
-          type: string 
-          enum: [all, ai_research, source_citation, data_privacy, external_publishing, tool_usage] 
-          default: "all" 
-          description: "Phân vùng tài liệu nội bộ để thu hẹp phạm vi tìm kiếm."
-        top_k: 
-          type: integer 
-          default: 3 
-          description: "Số lượng mục tài liệu tối đa cần trả về."
+        query: {type: string, default: "", description: "Truy vấn"}
+        policy_area: {type: string, enum: [all, ai_research, source_citation, data_privacy, external_publishing, tool_usage], default: "all", description: "Nhóm"}
+        top_k: {type: integer, default: 3, description: "Số mục"}
       required: [query]
 
   - name: papers
-    description: "Tìm kiếm các bài báo, công trình nghiên cứu khoa học từ cơ sở dữ liệu học thuật."
+    description: "Tìm bài báo khoa học."
     parameters:
       type: object
       properties:
-        query: 
-          type: string 
-          default: "" 
-          description: "Từ khóa khoa học hoặc tên mô hình/thuật toán (Ví dụ: 'YOLOv8', 'RAG'). TUYỆT ĐỐI KHÔNG chứa các cụm từ chỉ thời gian (như 'mới nhất', 'gần đây') hoặc từ chỉ cách sắp xếp vào đây vì đã được xử lý bởi tham số sort_by."
-        max_results: 
-          type: integer 
-          default: 5 
-          description: "Số lượng bài báo tối đa cần lấy."
-        sort_by: 
-          type: string 
-          enum: [relevance, lastUpdatedDate, submittedDate] 
-          default: "relevance" 
-          description: "Tiêu chí sắp xếp kết quả. Chọn 'lastUpdatedDate' hoặc 'submittedDate' nếu người dùng yêu cầu bài báo 'mới nhất'."
+        query: {type: string, default: "", description: "Từ khóa"}
+        max_results: {type: integer, default: 5, description: "Số lượng"}
+        sort_by: {type: string, enum: [relevance, lastUpdatedDate, submittedDate], default: "relevance", description: "Sắp xếp"}
       required: [query]
 
   - name: paper_text
-    description: "Trích xuất và lấy toàn bộ nội dung văn bản chi tiết từ một bài báo khoa học thông qua URL Arxiv."
+    description: "Lấy nội dung text của một bài báo."
     parameters:
       type: object
       properties:
-        arxiv_url: 
-          type: string 
-          default: "" 
-          description: "Đường dẫn URL chính xác hoặc ID của bài báo trên hệ thống Arxiv (Ví dụ: 'https://arxiv.org/abs/...'). KHÔNG tự ý đoán mò link nếu thiếu."
-        max_pages: 
-          type: integer 
-          default: 5 
-          description: "Giới hạn số lượng trang cần đọc."
-        max_chars: 
-          type: integer 
-          default: 8000 
-          description: "Giới hạn tổng số lượng ký tự tối đa cần trích xuất."
+        arxiv_url: {type: string, default: "", description: "ID hoặc địa chỉ"}
+        max_pages: {type: integer, default: 5, description: "Số trang"}
+        max_chars: {type: integer, default: 8000, description: "Số ký tự"}
       required: [arxiv_url]
-      
-  - name: format_citation
-    description: "Tạo một trích dẫn nguồn (citation) được định dạng từ một URL hoặc ID bài báo, hoàn toàn offline, KHÔNG cần internet hay API. Dùng khi người dùng yêu cầu trích dẫn/ghi nguồn cho một bài viết, bài báo khoa học cụ thể."
-    parameters:
-      type: object
-      properties:
-        source_url:
-          type: string
-          description: "Đường dẫn URL hoặc ID của nguồn cần trích dẫn (Ví dụ: 'https://arxiv.org/abs/1706.03762', 'https://example.com/bai-viet'). TUYỆT ĐỐI KHÔNG tự bịa ra link nếu người dùng không cung cấp."
-        style:
-          type: string
-          enum: [apa, mla, ieee]
-          default: "apa"
-          description: "Kiểu định dạng trích dẫn. Mặc định là 'apa'. Chỉ đổi sang 'mla' hoặc 'ieee' khi người dùng yêu cầu rõ chuẩn trích dẫn cụ thể."
-      required: [source_url]

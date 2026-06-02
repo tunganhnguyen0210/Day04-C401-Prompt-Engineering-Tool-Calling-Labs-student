@@ -1,0 +1,484 @@
+{
+  "run_id": "v3_B_group_openrouter_20260602T170046567173",
+  "version": "v3",
+  "artifact_version": "v3+p12307c65dad5+t817b0942f9e2",
+  "prompt_hash": "12307c65dad542c6582216071f1f71f3bf8d5d1ede947bf7ee7fdffbeb5b2b6e",
+  "tools_hash": "817b0942f9e2053b35d5c143b84109d990542183ca4f468ad1a912a59cba9a3a",
+  "phase": "B",
+  "suite": "group",
+  "provider": "openrouter",
+  "model": "openai/gpt-4o-mini",
+  "system_prompt": "D:\\Vin_500\\Day4\\Lab\\Day04-C401-Prompt-Engineering-Tool-Calling-Labs-student\\starter_v0\\artifacts\\system_prompt.md",
+  "tools": "D:\\Vin_500\\Day4\\Lab\\Day04-C401-Prompt-Engineering-Tool-Calling-Labs-student\\starter_v0\\artifacts\\tools.yaml",
+  "eval_cases": "data\\eval_group.json",
+  "dataset_id": "day04_v2_research_group",
+  "dataset_role": "group",
+  "description": "Case do NHÓM tự viết thêm để cover thêm trường hợp. Mỗi case cần: id, phase='B', query HOẶC turns, failure_type (thuộc allowed_failure_types), và expect (tool_calls[...] hoặc no_tool=true). Nên kèm metadata.what_it_tests.",
+  "generated_at": "2026-06-02T17:00:46",
+  "summary": {
+    "total_cases": 5,
+    "measured_cases": 5,
+    "provider_error_cases": 0,
+    "passed_cases": 5,
+    "case_accuracy": 1.0,
+    "tool_routing_accuracy": 1.0,
+    "argument_accuracy": 1.0,
+    "multiturn_accuracy": null,
+    "failure_counts": {},
+    "observed_mismatch_counts": {}
+  },
+  "results": [
+    {
+      "id": "R15_timeline_user_tweets",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "single_tool_call",
+        "difficulty": "medium",
+        "what_it_tests": "Lấy bài đăng của MỘT người cụ thể: AI phải định tuyến sang timeline, map tên 'Sam Altman' -> handle 'sama' và lấy đúng limit theo câu chữ."
+      },
+      "input": "Lấy giúp tôi 5 tweet mới nhất của Sam Altman nhé",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "sama",
+              "limit": 5
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "sama",
+              "limit": 5
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "timeline",
+          "args": {
+            "screenname": "sama",
+            "limit": 5
+          },
+          "result": {
+            "tool": "get_user_tweets",
+            "screenname": "sama",
+            "items": [
+              {
+                "title": "The OpenAI Foundation is doing a lot of wonderful things.",
+                "summary": "The OpenAI Foundation is doing a lot of wonderful things.\n\nHelping society become resilient to AI is going to be incredibly important. Much more to come here!",
+                "url": "https://x.com/sama/status/2061562575322492937",
+                "source": "@sama",
+                "date": "Mon Jun 01 21:36:34 +0000 2026",
+                "metrics": {
+                  "favorites": 1781,
+                  "retweets": 143,
+                  "views": "257102"
+                }
+              },
+              {
+                "title": "OpenAI Robotics is hiring, looking for exceptional full-stack hardware, ops, systems, and ML engineers to help us progra",
+                "summary": "OpenAI Robotics is hiring, looking for exceptional full-stack hardware, ops, systems, and ML engineers to help us program and manufacture robots that are useful for society.\n\nAI should be able to help people in the physical world. In the short term, we are focused on robots to support skilled workers to build our future infrastructure; in the long term, we imagine everyone having a personal robot doing anything they need.\n\nOur world simulation research program, led by Aditya Ramesh (@model_mechanic), has evolved over the past year into OpenAI Robotics. Progress is rapid, and based on a foundation of co-design between robotics hardware and ML research.\n\nIf you love working hands-on across the robotics stack and want to build the future, please consider joining us. Send an email with your background and evidence of exceptional accomplishment to: robotics-recruiting@openai.com",
+                "url": "https://x.com/sama/status/2061117302528188712",
+                "source": "@sama",
+                "date": "Sun May 31 16:07:13 +0000 2026",
+                "metrics": {
+                  "favorites": 12977,
+                  "retweets": 1027,
+                  "views": "2767573"
+                }
+              },
+              {
+                "title": "We want to help the world get a head start on biodefense:",
+                "summary": "We want to help the world get a head start on biodefense:\n\nhttps://t.co/gDQfOZrLA4",
+                "url": "https://x.com/sama/status/2061101875303530871",
+                "source": "@sama",
+                "date": "Sun May 31 15:05:55 +0000 2026",
+                "metrics": {
+                  "favorites": 1543,
+                  "retweets": 176,
+                  "views": "240543"
+                }
+              },
+              {
+                "title": "RT @thsottiaux: Five million users would agree. Resetting the limits tomorrow morning to celebrate.",
+                "summary": "RT @thsottiaux: Five million users would agree. Resetting the limits tomorrow morning to celebrate.\n\nTime to go /fast",
+                "url": "https://x.com/sama/status/2061097558819356732",
+                "source": "@sama",
+                "date": "Sun May 31 14:48:46 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 378,
+                  "views": "33"
+                }
+              },
+              {
+                "title": "AI should dramatically increase quality of life and individual freedoms for people around the world.",
+                "summary": "AI should dramatically increase quality of life and individual freedoms for people around the world.\n\nThe OpenAI Foundation is making an initial $250M commitment to measurement, transition support, and new approaches to broadly shared prosperity.\n\nhttps://t.co/zOD8O94RjQ",
+                "url": "https://x.com/sama/status/2059677202917331431",
+                "source": "@sama",
+                "date": "Wed May 27 16:44:46 +0000 2026",
+                "metrics": {
+                  "favorites": 4365,
+                  "retweets": 403,
+                  "views": "487646"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "R16_lookup_news_today",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "single_tool_call",
+        "difficulty": "medium",
+        "what_it_tests": "Tra cứu tin tức thời sự: AI phải đặt topic='news', timeframe='day' cho 'hôm nay' và rút query gọn về thực thể chính ('Nvidia'), không nhồi từ chỉ thời gian/thể loại."
+      },
+      "input": "Cập nhật giúp tôi tin tức hôm nay về Nvidia với",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "Nvidia",
+              "topic": "news",
+              "timeframe": "day"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "Nvidia",
+              "topic": "news",
+              "timeframe": "day"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "Nvidia",
+            "topic": "news",
+            "timeframe": "day"
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "Nvidia",
+            "topic": "news",
+            "timeframe": "day",
+            "items": [
+              {
+                "title": "Nvidia Stock Jumps After New PC Push Triggers Selloff in Intel, AMD - Yahoo Finance",
+                "url": "https://finance.yahoo.com/markets/stocks/articles/nvidia-stock-jumps-pc-push-174043570.html",
+                "source": "finance.yahoo.com",
+                "summary": "2. Best 0% APR cards. 3. Best balance transfer cards. 2. Best high-yield savings accounts. 3. Best money market accounts. 4. Best free checking accounts. 3. How to get approved. # Nvidia Stock Jumps After New PC Push Triggers Selloff in Intel, AMD. Nvidia (NASDAQ:NVDA) shares climbed about 4% on Monday after the chipmaker said it is moving deeper into the personal-computer market with a new product called RTX Spark. Advanced Micro Devices (NASDAQ:AMD) fell about 3%, Intel (NASDAQ:INTC) dropped about 4%, and Qualcomm (NASDAQ:QCOM) slid about 6% as investors weighed the competitive threat from Nvidia. Nvidia said RTX Spark is designed for AI, gaming and content creation, and targets slim Windows laptops and desktop systems with longer battery life and higher efficiency. The move marks a shift for Nvidia, which has mostly competed in PCs through graphics cards rather than full system-level chips. For years, Nvidia relied on AMD and Intel for central processing units, or CPUs, in systems using its GeForce RTX graphics line.",
+                "score": 0.99453074
+              },
+              {
+                "title": "Nvidia Says Vera Is 1.8 Times Faster Than x86 Chips - Yahoo Finance",
+                "url": "https://finance.yahoo.com/sectors/technology/articles/nvidia-says-vera-1-8-142954193.html",
+                "source": "finance.yahoo.com",
+                "summary": "- Best gifts for sister-in-law. - Best birthday gifts for her. - Best gifts for mother-in-law. - Best anniversary gifts for wife. Nvidia (NASDAQ:NVDA) is moving deeper into the AI data center, and this time the story is not just about GPUs. At the Computex conference in Taiwan, CEO Jensen Huang said Anthropic, OpenAI and SpaceX will be among the first major users of Nvidia's upcoming Vera central processing units inside their data centers. The chips are scheduled to enter full production in the third quarter of this year, giving Nvidia a new front in its push to control more of the AI infrastructure stack. Huang said Vera is 1.8 times faster than x86-based chips on key AI-related workloads, while continuing to argue that Nvidia can provide the full set of components data center operators need and integrate them into systems customers can deploy quickly.",
+                "score": 0.9891816
+              },
+              {
+                "title": "Nvidia Expects New Chips to 'Reinvent Personal Computer' - Manufacturing.net",
+                "url": "https://www.manufacturing.net/artificial-intelligence/news/22967872/nvidia-expects-new-chips-to-reinvent-personal-computer",
+                "source": "manufacturing.net",
+                "summary": "TAIPEI, Taiwan (AP) — Nvidia on Monday unveiled new powerful chips that would bring advanced artificial intelligence functions into laptops and desktop computers, with the new personal computer models from brands including Microsoft and Dell set to roll out later this year. \"This is going to be the new PC,\" Huang said as he unveiled Nvidia's RTX Spark superchip — which combines CPU, or central processing unit, and GPU, or graphics processing unit, capabilities — that would power new Windows laptop and desktop computer models in what the company called \"AI personal computers,\" expected to debut in the fall of this year. The company said it will be \"reinventing the personal computer\" for creating and gaming. Also during Monday's speech, Nvidia's Huang said its new Vera CPUs for data centers are in full production and are \"going to be our new major growth driver\" on the boom of AI agents, with early customers including Anthropic, OpenAI and SpaceXAI.",
+                "score": 0.9874721
+              },
+              {
+                "title": "NVIDIA сунъий интеллект агентлари учун янги RTX Спарк процессорини тақдим этди - Zamin.uz",
+                "url": "https://zamin.uz/en/technology/204657-nvidia-introduces-new-rtx-spark-processor-for-ai-agents.html",
+                "source": "zamin.uz",
+                "summary": "# NVIDIA introduces new RTX Spark processor for AI agents. At the Computex exhibition in Taipei, NVIDIA unveiled a new processor for PCs called RTX Spark. With this innovation, NVIDIA aims to expand its share in the $200 billion CPU market. Windows PCs equipped with the new RTX Spark chips will go on sale this fall. NVIDIA founder and CEO Jensen Huang noted that this technology will end the era of manually opening, clicking, and typing in applications. The system is expected to become a primary tool not only for creators and gamers but also for billions of AI agents that automate daily tasks. NVIDIA promises that its RTX technology will improve image quality and accelerate AI functions in over 1,000 games and applications. This is a significant step for NVIDIA in returning to the ARM-based Windows market following the failure of Surface RT in 2013. News » Technology » NVIDIA introduces new RTX Spark processor for AI agents.",
+                "score": 0.98527133
+              },
+              {
+                "title": "Nvidia bets on AI personal computers with new chip powering Windows laptops - AP News",
+                "url": "https://apnews.com/article/nvidia-microsoft-ai-laptops-jensen-chip-c807f7333b93b9927b62b1240dcf65a1",
+                "source": "apnews.com",
+                "summary": "Test Your News I.Q. 2026 Elections Election Results Election calendar White House Congress Supreme Court The latest AP-NORC polls Ground Game. Founded in 1846, AP today remains the most trusted source of fast, accurate, unbiased news in all formats and the essential provider of the technology and services vital to the news business. “This is going to be the new PC,” Huang said as he unveiled Nvidia’s RTX Spark superchip — which combines CPU, or central processing unit, and GPU, or graphics processing unit, capabilities — that would power new Windows laptop and desktop computer models in what the company called “AI personal computers,” expected to debut in the fall of this year. Also during Monday’s speech, Nvidia’s Huang said its new Vera CPUs for data centers are in full production and are “going to be our new major growth driver” on the boom of AI agents, with early customers expected to include Anthropic, OpenAI and SpaceXAI.",
+                "score": 0.9843364
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "R17_fetch_given_url",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "single_tool_call",
+        "difficulty": "easy",
+        "what_it_tests": "Đã có sẵn URL cụ thể: AI phải gọi fetch đúng đường dẫn đó, KHÔNG đi tìm kiếm (lookup) thay thế."
+      },
+      "input": "Đọc và tóm tắt giúp tôi nội dung bài viết này: https://vnexpress.net/cong-nghe-ai-2026.html",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://vnexpress.net/cong-nghe-ai-2026.html"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://vnexpress.net/cong-nghe-ai-2026.html"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "fetch",
+          "args": {
+            "url": "https://vnexpress.net/cong-nghe-ai-2026.html"
+          },
+          "result": {
+            "tool": "read_url",
+            "url": "https://vnexpress.net/cong-nghe-ai-2026.html",
+            "items": [
+              {
+                "title": "VnExpress - Báo tiếng Việt nhiều người xem nhất",
+                "url": "https://vnexpress.net/cong-nghe-ai-2026.html",
+                "source": "vnexpress.net",
+                "summary": "Tất cả chuyên mụcĐóng\n\n- [VnE-GO](https://vnexpress.net/vne-go \"VnE-GO\")\n- [Discover](https://vnexpress.net/vne-go/discover \"Discover\")\n- [Shorts](https://vnexpress.net/vne-go \"Shorts\")\n- [Podcasts](https://vnexpress.net/vne-go/podcast \"Podcasts\")\n\n- [Thời sự](https://vnexpress.net/thoi-su \"Thời sự\")\n- [Đại hội Đảng XIV](https://vnexpress.net/thoi-su/dai-hoi-dang-toan-quoc-lan-thu-14 \"Đại hội Đảng XIV\")\n- [Chính trị](https://vnexpress.net/thoi-su/chinh-tri \"Chính trị\")\n- [Kỷ nguyên mới](https://vnexpress.net/thoi-su/huong-toi-ky-nguyen-moi \"Kỷ nguyên mới\")\n- [Dân sinh](https://vnexpress.net/thoi-su/dan-sinh \"Dân sinh\")\n- [Việc làm](https://vnexpress.net/thoi-su/lao-dong-viec-lam \"Việc làm\")\n- [Giao thông](https://vnexpress.net/thoi-su/giao-thong \"Giao thông\")\n- [Quỹ Hy vọng](https://vnexpress.net/thoi-su/quy-hy-vong \"Quỹ Hy vọng\")\n- Xem thêm\n\n- [Thế giới](https://vnexpress.net/the-gioi \"Thế giới\")\n- [Phân tích](https://vnexpress.net/the-gioi/phan-tich \"Phân tích\")\n- [Tư liệu](https://vnexpress.net/the-gioi/tu-lieu \"Tư liệu\")\n- [Quân sự](https://vnexpress.net/the-gioi/quan-su \"Quân sự\")\n- [Cuộc sống đó đây](https://vnexpress.net/the-gioi/cuoc-song-do-day \"Cuộc sống đó đây\")\n- [Người Việt 5 châu](https://vnexpress.net/the-gioi/nguoi-viet-5-chau \"Người Việt 5 châu\")\n- [Bắc Mỹ](https://vnexpress.net/the-gioi/bac-my \"Bắc Mỹ\")\n- Xem thêm\n\n- [Kinh doanh](https://vnexpress.net/kinh-doanh \"Kinh doanh\")\n- [NetZero](https://vnexpress.net/kinh-doanh/net-zero \"NetZero\")\n- [Quốc tế](https://vnexpress.net/kinh-doanh/quoc-te \"Quốc tế\")\n- [Doanh nghiệp](https://vnexpress.net/kinh-doanh/doanh-nghiep \"Doanh nghiệp\")\n- [Chứng khoán](https://vnexpress.net/kinh-doanh/chung-khoan \"Chứng khoán\")\n- [Ebank](https://vnexpress.net/kinh-doanh/ebank \"Ebank\")\n- [Vĩ mô](https://vnexpress.net/kinh-doanh/vi-mo \"Vĩ mô\")\n- [Tiền của tôi](https://vnexpress.net/kinh-doanh/tien-cua-toi \"Tiền của tôi\")\n- [Hàng hóa](https://vnexpress.net/kinh-doanh/hang-hoa \"Hàng hóa\")\n- [Kinh tế vùng](https://vnexpress.net/kinh-doanh/kinh-te-vung \"Kinh tế vùng\")\n- [Doanh nghiệp vươn mình](https://vnexpress.net/kinh-doanh/doanh-nghiep-vuon-minh \"Doanh nghiệp vươn mình\")\n- Xem thêm\n\n- [Khoa học công nghệ](https://vnexpress.net/khoa-hoc-cong-nghe \"Khoa học công nghệ\")\n- [Hoạt động Bộ KH&CN](https://vnexpress.net/khoa-hoc-cong-nghe/bo-khoa-hoc-va-cong-nghe \"Hoạt động Bộ KH&CN\")\n- [Chuyển đổi số](https://vnexpress.net/khoa-hoc-cong-nghe/chuyen-doi-so \"Chuyển đổi số\")\n- [Đổi mới sáng tạo](https://vnexpress.net/khoa-hoc-cong-nghe/doi-moi-sang-tao \"Đổi mới sáng tạo\")\n- [AI](https://vnexpress.net/khoa-hoc-cong-nghe/ai \"AI\")\n- [Vũ trụ](https://vnexpress.net/khoa-hoc-cong-nghe/vu-tru \"Vũ trụ\")\n- [Thế giới tự nhiên](https://vnexpress.net/khoa-hoc-cong-nghe/the-gioi-tu-nhien \"Thế giới tự nhiên\")\n- [Thiết bị](https://vnexpress.net/khoa-hoc-cong-nghe/thiet-bi \"Thiết bị\")\n- [Cửa sổ tri thức](https://vnexpress.net/khoa-hoc-cong-nghe/cua-so-tri-thuc \"Cửa sổ tri thức\")\n- Xem thêm\n\n- [Góc nhìn](https://vnexpress.net/goc-nhin \"Góc nhìn\")\n- [Chính trị & chính sách](https://vnexpress.net/goc-nhin/chinh-tri-chinh-sach \"Chính trị & chính sách\")\n- [Y tế & sức khỏe](https://vnexpress.net/goc-nhin/y-te-suc-khoe \"Y tế & sức khỏe\")\n- [Kinh doanh & quản trị](https://vnexpress.net/goc-nhin/kinh-doanh-quan-tri \"Kinh doanh & quản trị\")\n- [Giáo dục & tri thức](https://vnexpress.net/goc-nhin/giao-duc-tri-thuc \"Giáo dục & tri thức\")\n- [Môi trường](https://vnexpress.net/goc-nhin/moi-truong \"Môi trường\")\n- [Văn hóa & lối sống](https://vnexpress.net/goc-nhin/van-hoa-loi-song \"Văn hóa & lối sống\")\n- [Tác giả](https://vnexpress.net/goc-nhin/tac-gia \"Tác giả\")\n- Xem thêm\n\n- [Spotlight](https://vnexpress.net/spotlight \"Spotlight\")\n\n- [Bất động sản](https://vnexpress.net/bat-dong-san \"Bất động sản\")\n- [Chính sách](https://vnexpress.net/bat-dong-san/chinh-sach \"Chính sách\")\n- [Thị trường](https://vnexpress.net/bat-dong-san/thi-truong \"Thị trường\")\n- [Dự án](https://vnexpress.net/bat-dong-san/du-an \"Dự án\")\n- [Không gian sống](h"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "R18_social_search_top",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "single_tool_call",
+        "difficulty": "medium",
+        "what_it_tests": "Tweet theo CHỦ ĐỀ (không gắn người cụ thể): AI phải gọi social_search với query lõi và đặt search_type='Top' khi người dùng nói 'phổ biến nhất'."
+      },
+      "input": "Tìm cho tôi các tweet đang phổ biến nhất về AI",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "social_search",
+            "args": {
+              "query": "AI",
+              "search_type": "Top"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "social_search",
+            "args": {
+              "query": "AI",
+              "search_type": "Top"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "social_search",
+          "args": {
+            "query": "AI",
+            "search_type": "Top"
+          },
+          "result": {
+            "tool": "search_tweets",
+            "query": "AI",
+            "search_type": "Top",
+            "items": [
+              {
+                "title": "The laptop hasn't changed in 30 years. NVIDIA just changed it",
+                "summary": "The laptop hasn't changed in 30 years. NVIDIA just changed it\n\nRTX Spark is their first PC chip ever.\n\n- RTX 5070 level GPU\n- 128GB unified memory\n- 1 petaflop of local AI\n- thin, light, barely throttles unplugged\n\nYour AI agent lives on the machine. 24/7. No cloud.\n\nThis is step one of the agentic AI PC, and everyone else is about to copy it.",
+                "url": "https://x.com/shiri_shh/status/2061426931162288614",
+                "source": "@shiri_shh",
+                "date": "Mon Jun 01 12:37:34 +0000 2026",
+                "metrics": {
+                  "favorites": 27498,
+                  "retweets": 2375,
+                  "views": "6091366"
+                }
+              },
+              {
+                "title": "Most people think prompting is just writing better sentences",
+                "summary": "Most people think prompting is just writing better sentences\n\nAnthropic shows why that's wrong\n\nThis 32-minute workshop breaks down how prompts are built for production\n\nNot prompt hacks\nNot \"act as\"\nNot another $300 course\n\nActual systems\n\nEvals\nEdge cases\nModel migration\nAgent loops\n\nGood prompt is not one message\n\nIt's a workflow the model can follow, test and improve\n\nThis matters because every new claude opus or sonnet will still reward the same rules\n\nWatch the prompting playbook\nBookmark it before your next bad ai answer is just a bad setup",
+                "url": "https://x.com/0xwhrrari/status/2061432825631404538",
+                "source": "@0xwhrrari",
+                "date": "Mon Jun 01 13:00:59 +0000 2026",
+                "metrics": {
+                  "favorites": 568,
+                  "retweets": 81,
+                  "views": "111287"
+                }
+              },
+              {
+                "title": "❤️‍🔥 Just Recorded a new 11 min tutorial on how to Build an Award-Winning Website using Google AI studio (0 Coding) http",
+                "summary": "❤️‍🔥 Just Recorded a new 11 min tutorial on how to Build an Award-Winning Website using Google AI studio (0 Coding) https://t.co/HzFPiS4CHT",
+                "url": "https://x.com/viktoroddy/status/2061435405283577929",
+                "source": "@viktoroddy",
+                "date": "Mon Jun 01 13:11:14 +0000 2026",
+                "metrics": {
+                  "favorites": 467,
+                  "retweets": 39,
+                  "views": "20106"
+                }
+              },
+              {
+                "title": "To get good animations from an AI you need to get good at telling it what you want:",
+                "summary": "To get good animations from an AI you need to get good at telling it what you want:\n\n- \"stagger this list of items\"\n- \"make this animation direction-aware\"\n- \"spacial consistency\", \"crossfade\", \"layout animation\", \n\nI made a motion vocabulary for this:\nhttps://t.co/ExAxpr31no https://t.co/SQXn2piA6r",
+                "url": "https://x.com/emilkowalski/status/2061426518333571576",
+                "source": "@emilkowalski",
+                "date": "Mon Jun 01 12:35:56 +0000 2026",
+                "metrics": {
+                  "favorites": 2775,
+                  "retweets": 188,
+                  "views": "138734"
+                }
+              },
+              {
+                "title": "この時間まで起きてる人へ🕛",
+                "summary": "この時間まで起きてる人へ🕛\n\n私からのサービス動画です❤\n\nでは、おやすみなさい🌃💤\n#GrokImagine #AI美女 #AIart https://t.co/7LANyC6vUI",
+                "url": "https://x.com/UNDERCOVER_JURI/status/2060368140484452377",
+                "source": "@UNDERCOVER_JURI",
+                "date": "Fri May 29 14:30:19 +0000 2026",
+                "metrics": {
+                  "favorites": 158,
+                  "retweets": 11,
+                  "views": "15282"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "R19_clarify_missing_account",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "confirm_before_write",
+        "difficulty": "hard",
+        "what_it_tests": "Ranh giới an toàn (wrong_boundary): người dùng nhắc tweet nhưng KHÔNG nói của tài khoản nào -> AI phải gọi clarify hỏi tài khoản, KHÔNG tự đoán một người mặc định."
+      },
+      "input": "Tóm tắt 5 tweet mới nhất giúp mình với",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {}
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "question": "Bạn muốn tóm tắt tweet của tài khoản nào?",
+              "response_type": "text"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_boundary",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "clarify",
+          "args": {
+            "question": "Bạn muốn tóm tắt tweet của tài khoản nào?",
+            "response_type": "text"
+          },
+          "result": {
+            "tool": "ask_user",
+            "question": "Bạn muốn tóm tắt tweet của tài khoản nào?",
+            "response_type": "text",
+            "options": [],
+            "awaiting_user": true
+          }
+        }
+      ]
+    }
+  ]
+}
